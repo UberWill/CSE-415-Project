@@ -213,24 +213,24 @@ tkinter.Button(window, text="Reset Goals",
 
 
 #the area the user will select certain restrictions from
-tkinter.Label(window, text = "Restrictions", font= ("Helvetica",16)).grid(row=8,column=5,sticky='w')
+tkinter.Label(window, text = "Restrictions", font= ("Helvetica",16)).grid(row=11,column=5,sticky='w')
 #all the restrictions
 c1 = tkinter.Checkbutton(window, text = "Vegetarian", variable = vegetarian)
-c1.grid(row = 9, column = 5,sticky='w')
+c1.grid(row = 12, column = 5,sticky='w')
 c2 = tkinter.Checkbutton(window, text = "Peanut Allergy", variable = peanut_allergy)
-c2.grid(row = 10, column = 5,sticky='w')
+c2.grid(row = 13, column = 5,sticky='w')
 c3 = tkinter.Checkbutton(window, text = "Lactose Intolerant", variable = lactose_intolerant)
-c3.grid(row = 11, column = 5,sticky='w')
+c3.grid(row = 14, column = 5,sticky='w')
 #button to set restrictions
 tkinter.Button(window, text="Set Restrictions",
-               command = set_restrictions).grid(row=12,column=5,sticky='w',pady=4)
+               command = set_restrictions).grid(row=15,column=5,sticky='w',pady=4)
 #space to let the user know their restrictions have been accepted by the program
 restrictions_set = tkinter.Text(window,height=1,width=17)
-restrictions_set.grid(row=12,column=6)
+restrictions_set.grid(row=15,column=6)
 restrictions_set.configure(state='disabled')
 #button to reset restrictions
 tkinter.Button(window, text="Reset Restrictions",
-               command = reset_restrictions).grid(row=13,column=5,sticky='w',pady=4)
+               command = reset_restrictions).grid(row=16,column=5,sticky='w',pady=4)
 
 
 #button to quit the program
