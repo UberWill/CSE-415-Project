@@ -9,7 +9,7 @@ class IngredientNode:
         self.fat = fat
         self.classification = classification.lower()
 
-
+#the class to store meals
 class MealNode:
 
     def __init__(self, name, ingredient1, ingredient2, ingredient3):
@@ -31,6 +31,7 @@ class MealNode:
         self.total_fat = self.fat_ingredient.fat +\
                               self.carb_ingredient.fat + self.protein_ingredient.fat
 
+#the class to store meals for the day
 class DayNode:
 
     def __init__(self, meal1, meal2, meal3):
