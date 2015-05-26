@@ -1,9 +1,9 @@
 import tkinter
 import Project_Classes
-import time #for reasons
 
 #global variables used to make the ingredient objects
 i_name = ""
+i_class = ""
 i_cals = 0
 i_pro = 0
 i_carbs = 0
@@ -16,10 +16,6 @@ added_ingredients = []
 window = tkinter.Tk()
 window.title("Diet Plan")
 window.wm_iconbitmap('icon.ico')
-
-#shhhh
-img = tkinter.PhotoImage(file="ainsley.gif")
-#shhhh
 
 #the frame for the ingredient section
 ing = tkinter.Frame(window,bd=5,relief='ridge')
@@ -53,6 +49,8 @@ g_carbs = 0
 vegetarian = tkinter.IntVar()
 peanut_allergy = tkinter.IntVar()
 lactose_intolerant = tkinter.IntVar()
+#the variable to show that the restrictions have been set by user (0=not set, 1 = set)
+set_r = 0
 
 
 #function to get ingredient input and store it
@@ -67,8 +65,10 @@ def get_ingredient():
     i_carbs = carbs.get()
     global i_fat
     i_fat = fat.get()
+    global i_class
+    i_class = classif.get()
     #display error if not all fields filled
-    if i_name == '' or i_cals == '' or i_pro == '' or i_carbs == '' or i_fat == '':
+    if i_name == '' or i_cals == '' or i_pro == '' or i_carbs == '' or i_fat == '' or classif == '':
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,100))
@@ -84,12 +84,13 @@ def get_ingredient():
         i_fat = 0
     else:
         global added_ingredients
-        added_ingredients.append(Project_Classes.IngredientNode(i_name,i_cals,i_pro,i_carbs,i_fat))
+        added_ingredients.append(Project_Classes.IngredientNode(i_name,i_cals,i_pro,i_carbs,i_fat,i_class))
         name.delete(0,'end')
         total_calories.delete(0,'end')
         protein.delete(0,'end')
         carbs.delete(0,'end')
         fat.delete(0,'end')
+        classif.delete(0,'end')
 
         counter.configure(state='normal')
         counter.delete(1.0,'end')
@@ -134,6 +135,11 @@ def set_goals():
 
 #the method that resets the goals so the user can input new ones
 def reset_goals():
+    global g_cals, g_fat, g_pro, g_carbs
+    g_cals = 0
+    g_fat = 0
+    g_pro = 0
+    g_carbs = 0
     calories_goal.configure(state='normal')
     fat_goal.configure(state='normal')
     protein_goal.configure(state='normal')
@@ -158,6 +164,8 @@ def set_restrictions():
     restrictions_set.configure(state='normal')
     restrictions_set.insert('end',"RESTRICTIONS SET!")
     restrictions_set.configure(state='disabled')
+    global set_r
+    set_r = 1
 
 #the method that resets the restrictions to allow changes to them
 def reset_restrictions():
@@ -173,10 +181,12 @@ def reset_restrictions():
     vegetarian.set(0)
     peanut_allergy.set(0)
     lactose_intolerant.set(0)
+    global set_r
+    set_r = 0
 
 #The method that will make the meals once all input from user received
 def make_meals():
-    global g_cals, g_fat, g_protein, g_carbs, added_ingredients
+    global g_cals, g_fat, g_protein, g_carbs, added_ingredients, set_r
     #displays error if no goals set
     if g_cals == 0 and g_fat == 0 and g_pro == 0 and g_carbs == 0:
         top = tkinter.Toplevel()
@@ -197,12 +207,18 @@ def make_meals():
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
         errbutton.pack()
+    elif set_r == 0:
+        top = tkinter.Toplevel()
+        top.title("Error")
+        top.geometry('{}x{}'.format(180,90))
+        top.wm_iconbitmap('error.ico')
+        msg = tkinter.Message(top, text = "Please set restrictions first.")
+        msg.pack()
+        errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
+        errbutton.pack()
     else:
         #TO DO - this part should be fun >.>
-        top = tkinter.Toplevel()
-        top.title("LETS SPICE IT UP")
-        top.wm_iconbitmap('icon.ico')
-        tkinter.Label(top,image=img).pack()
+        pass
 
 #the method to display new meals if shown ones were not to the user's liking
 def new_meals():
@@ -231,15 +247,19 @@ carbs.grid(row=4,column=1)
 tkinter.Label(ing, text="Fat (g)").grid(row=5,sticky='e')
 fat = tkinter.Entry(ing)
 fat.grid(row=5,column=1)
+#the ingredient classification area (fat, carb, or protein)
+tkinter.Label(ing, text="Classification\n(Fat, Carb, or Protein)").grid(row=6,sticky='e')
+classif = tkinter.Entry(ing)
+classif.grid(row=6,column=1)
 
 #button to finish the adding of ingredient
 tkinter.Button(ing, text="Add Ingredient",
-               command = get_ingredient).grid(row=6,column=1,sticky='w',pady=4)
+               command = get_ingredient).grid(row=7,column=1,sticky='w',pady=4)
 
 #number of ingredients added, counter
-tkinter.Label(ing,text="Ingredients\nAdded:").grid(row=7,column=0,sticky='e')
+tkinter.Label(ing,text="Ingredients\nAdded:").grid(row=8,column=0,sticky='e')
 counter = tkinter.Text(ing,height=1,width=3)
-counter.grid(row=7,column=1,sticky='w')
+counter.grid(row=8,column=1,sticky='w')
 counter.insert('end',"0")
 counter.configure(state='disabled')
 
