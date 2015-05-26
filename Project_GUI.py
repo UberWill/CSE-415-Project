@@ -9,6 +9,7 @@ i_pro = 0
 i_carbs = 0
 i_fat = 0
 
+
 #A list of all added ingredients (they have their own attributes - see IngredientNode class)
 added_ingredients = []
 #counters for how many of each classification of ingredient has been added
@@ -36,6 +37,11 @@ rest.grid(row=1,column=1,sticky='w')
 #the frame to house the meals and goal differences, basically the results
 results = tkinter.Frame(window,bd=5,relief = 'ridge')
 results.grid(row=0,column=1,sticky='w')
+
+#the ingredient hazard, 'peanuts' is peanut allergy, 'meat' means not vegetarian safe, 'lactose'
+#means not lactose intolerant safe, 'none' is obvious
+i_hazard = tkinter.StringVar()
+i_hazard.set("none")
 
 #the goal for weight loss or weight gain, "lose" is for weight loss, "gain" is for weight gain
 #this gets changed via the radio buttons in the goal section automatically as different
@@ -71,6 +77,7 @@ def get_ingredient():
     i_fat = fat.get()
     global i_class
     i_class = classif.get()
+    global i_hazard
 
     #convert the string input to integers, if not possible display error to user
     try:
@@ -173,7 +180,7 @@ def get_ingredient():
         i_fat = 0
     else:
         global added_ingredients
-        new_ing = Project_Classes.IngredientNode(i_name,i_cals,i_pro,i_carbs,i_fat,i_class)
+        new_ing = Project_Classes.IngredientNode(i_name,i_cals,i_pro,i_carbs,i_fat,i_class,i_hazard.get())
         added_ingredients.append(new_ing)
         name.delete(0,'end')
         total_calories.delete(0,'end')
@@ -181,6 +188,7 @@ def get_ingredient():
         carbs.delete(0,'end')
         fat.delete(0,'end')
         classif.delete(0,'end')
+        i_hazard.set('none')
 
         counter.configure(state='normal')
         counter.delete(1.0,'end')
@@ -215,6 +223,7 @@ def set_goals():
     global g_fat
     global g_pro
     global g_carbs
+    global weight_goal
     g_cals = calories_goal.get()
     g_fat = fat_goal.get()
     g_pro = protein_goal.get()
@@ -300,6 +309,19 @@ def set_goals():
         g_fat = 0
         g_pro = 0
         g_carbs = 0
+    elif ((g_fat / 100) + (g_pro / 100) + (g_carbs / 100)) != 1:
+        top = tkinter.Toplevel()
+        top.title("Error")
+        top.geometry('{}x{}'.format(180,90))
+        top.wm_iconbitmap('error.ico')
+        msg = tkinter.Message(top, text = "Please make sure %'s add to 100%")
+        msg.pack()
+        errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
+        errbutton.pack()
+        g_cals = 0
+        g_fat = 0
+        g_pro = 0
+        g_carbs = 0
     else:
         calories_goal.configure(state='disabled')
         fat_goal.configure(state='disabled')
@@ -308,13 +330,18 @@ def set_goals():
         r1.configure(state='disabled')
         r2.configure(state='disabled')
 
+        g_fat = ((g_fat / 100) * g_cals) / 9
+        g_pro = ((g_pro / 100) * g_cals) / 4
+        g_carbs = ((g_carbs / 100) * g_cals) / 4
+
         goal_set.configure(state='normal')
         goal_set.insert('end',"GOAL SET!")
         goal_set.configure(state='disabled')
 
 #the method that resets the goals so the user can input new ones
 def reset_goals():
-    global g_cals, g_fat, g_pro, g_carbs
+    global g_cals, g_fat, g_pro, g_carbs, weight_goal
+    weight_goal.set("lose")
     g_cals = 0
     g_fat = 0
     g_pro = 0
@@ -440,37 +467,48 @@ tkinter.Label(ing, text="Classification\n(Fat, Carb, or Protein)").grid(row=6,st
 classif = tkinter.Entry(ing)
 classif.grid(row=6,column=1)
 
+#area for user to specify food hazard for ingredient
+h1 = tkinter.Radiobutton(ing, text = "Contains Peanuts", variable = i_hazard, value = 'peanut')
+h1.grid(row = 7, column = 1,sticky='w')
+h2 = tkinter.Radiobutton(ing, text = "Meat Product", variable = i_hazard, value = 'meat')
+h2.grid(row = 8, column = 1,sticky='w')
+h3 = tkinter.Radiobutton(ing, text = "Contains Lactose", variable = i_hazard, value = 'lactose')
+h3.grid(row = 9, column = 1,sticky='w')
+h4 = tkinter.Radiobutton(ing, text = "No Hazard", variable = i_hazard, value = 'none')
+h4.grid(row=10,column=1,sticky = 'w')
+
 #button to finish the adding of ingredient
 tkinter.Button(ing, text="Add Ingredient",
-               command = get_ingredient).grid(row=7,column=1,sticky='w',pady=4)
+               command = get_ingredient).grid(row=11,column=1,sticky='w',pady=4)
 
 #number of ingredients added, counter
-tkinter.Label(ing,text="Ingredients\nAdded:").grid(row=8,column=0,sticky='e')
+tkinter.Label(ing,text="Ingredients\nAdded:").grid(row=12,column=0,sticky='e')
 counter = tkinter.Text(ing,height=1,width=3)
-counter.grid(row=8,column=1,sticky='w')
+counter.grid(row=12,column=1,sticky='w')
 counter.insert('end',"0")
 counter.configure(state='disabled')
 
 #number of fat-based ingredients added
-tkinter.Label(ing,text="Fat-Based\nIngredients\nAdded:").grid(row=9,column=0,sticky='e')
+tkinter.Label(ing,text="Fat-Based\nIngredients\nAdded:").grid(row=13,column=0,sticky='e')
 fat_counter = tkinter.Text(ing,height=1,width=3)
-fat_counter.grid(row=9,column=1,sticky='w')
+fat_counter.grid(row=13,column=1,sticky='w')
 fat_counter.insert('end',"0")
 fat_counter.configure(state='disabled')
 
 #number of carb-based ingredients added
-tkinter.Label(ing,text="Carb-Based\nIngredients\nAdded:").grid(row=10,column=0,sticky='e')
+tkinter.Label(ing,text="Carb-Based\nIngredients\nAdded:").grid(row=14,column=0,sticky='e')
 carb_counter = tkinter.Text(ing,height=1,width=3)
-carb_counter.grid(row=10,column=1,sticky='w')
+carb_counter.grid(row=14,column=1,sticky='w')
 carb_counter.insert('end',"0")
 carb_counter.configure(state='disabled')
 
 #number of protein-based ingredients added
-tkinter.Label(ing,text="Protein-Based\nIngredients\nAdded:").grid(row=11,column=0,sticky='e')
+tkinter.Label(ing,text="Protein-Based\nIngredients\nAdded:").grid(row=15,column=0,sticky='e')
 pro_counter = tkinter.Text(ing,height=1,width=3)
-pro_counter.grid(row=11,column=1,sticky='w')
+pro_counter.grid(row=15,column=1,sticky='w')
 pro_counter.insert('end',"0")
 pro_counter.configure(state='disabled')
+
 
 #initialize the goals section
 tkinter.Label(goals, text = "Goals", font= ("Helvetica",16)).grid(row=8,column=1,sticky='w')
