@@ -71,6 +71,77 @@ def get_ingredient():
     i_fat = fat.get()
     global i_class
     i_class = classif.get()
+
+    #convert the string input to integers, if not possible display error to user
+    try:
+        i_cals = int(i_cals)
+    except ValueError:
+        top = tkinter.Toplevel()
+        top.title("Error")
+        top.geometry('{}x{}'.format(180,100))
+        top.wm_iconbitmap('error.ico')
+        msg = tkinter.Message(top, text = "Please enter an integer amount for calories.")
+        msg.pack()
+        errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
+        errbutton.pack()
+        i_name = ''
+        i_cals = 0
+        i_pro = 0
+        i_carbs = 0
+        i_fat = 0
+        return 0
+    try:
+        i_pro = int(i_pro)
+    except ValueError:
+        top = tkinter.Toplevel()
+        top.title("Error")
+        top.geometry('{}x{}'.format(180,100))
+        top.wm_iconbitmap('error.ico')
+        msg = tkinter.Message(top, text = "Please enter an integer amount for protein.")
+        msg.pack()
+        errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
+        errbutton.pack()
+        i_name = ''
+        i_cals = 0
+        i_pro = 0
+        i_carbs = 0
+        i_fat = 0
+        return 0
+    try:
+        i_carbs = int(i_carbs)
+    except ValueError:
+        top = tkinter.Toplevel()
+        top.title("Error")
+        top.geometry('{}x{}'.format(180,100))
+        top.wm_iconbitmap('error.ico')
+        msg = tkinter.Message(top, text = "Please enter an integer amount for carbs.")
+        msg.pack()
+        errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
+        errbutton.pack()
+        i_name = ''
+        i_cals = 0
+        i_pro = 0
+        i_carbs = 0
+        i_fat = 0
+        return 0
+    try:
+        i_fat = int(i_fat)
+    except ValueError:
+        top = tkinter.Toplevel()
+        top.title("Error")
+        top.geometry('{}x{}'.format(180,100))
+        top.wm_iconbitmap('error.ico')
+        msg = tkinter.Message(top, text = "Please enter an integer amount for fat.")
+        msg.pack()
+        errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
+        errbutton.pack()
+        i_name = ''
+        i_cals = 0
+        i_pro = 0
+        i_carbs = 0
+        i_fat = 0
+        return 0
+
     #display error if not all fields filled
     if i_name == '' or i_cals == '' or i_pro == '' or i_carbs == '' or i_fat == '' or i_class == '':
         top = tkinter.Toplevel()
@@ -148,6 +219,73 @@ def set_goals():
     g_fat = fat_goal.get()
     g_pro = protein_goal.get()
     g_carbs = carb_goal.get()
+
+    #convert the string input to integers, if not possible display error to user
+    try:
+        g_cals = int(g_cals)
+    except ValueError:
+        top = tkinter.Toplevel()
+        top.title("Error")
+        top.geometry('{}x{}'.format(180,100))
+        top.wm_iconbitmap('error.ico')
+        msg = tkinter.Message(top, text = "Please enter an integer amount for calories.")
+        msg.pack()
+        errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
+        errbutton.pack()
+        g_cals = 0
+        g_fat = 0
+        g_pro = 0
+        g_carbs = 0
+        return 0
+    try:
+        g_fat = int(g_fat)
+    except ValueError:
+        top = tkinter.Toplevel()
+        top.title("Error")
+        top.geometry('{}x{}'.format(180,100))
+        top.wm_iconbitmap('error.ico')
+        msg = tkinter.Message(top, text = "Please enter an integer amount for fat.")
+        msg.pack()
+        errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
+        errbutton.pack()
+        g_cals = 0
+        g_fat = 0
+        g_pro = 0
+        g_carbs = 0
+        return 0
+    try:
+        g_pro = int(g_pro)
+    except ValueError:
+        top = tkinter.Toplevel()
+        top.title("Error")
+        top.geometry('{}x{}'.format(180,100))
+        top.wm_iconbitmap('error.ico')
+        msg = tkinter.Message(top, text = "Please enter an integer amount for protein.")
+        msg.pack()
+        errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
+        errbutton.pack()
+        g_cals = 0
+        g_fat = 0
+        g_pro = 0
+        g_carbs = 0
+        return 0
+    try:
+        g_carbs = int(g_carbs)
+    except ValueError:
+        top = tkinter.Toplevel()
+        top.title("Error")
+        top.geometry('{}x{}'.format(180,100))
+        top.wm_iconbitmap('error.ico')
+        msg = tkinter.Message(top, text = "Please enter an integer amount for carbs.")
+        msg.pack()
+        errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
+        errbutton.pack()
+        g_cals = 0
+        g_fat = 0
+        g_pro = 0
+        g_carbs = 0
+        return 0
+
     #display error if not all fields filled out
     if g_cals == '' or g_fat == '' or g_pro == '' or g_carbs == '':
         top = tkinter.Toplevel()
