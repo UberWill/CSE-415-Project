@@ -12,15 +12,47 @@ i_fat = 0
 
 #A list of all added ingredients (they have their own attributes - see IngredientNode class)
 added_ingredients = []
+carb_ingredients = []
+protein_ingredients = []
+fat_ingredients = []
+full_days = []
+meals = []
+
 #counters for how many of each classification of ingredient has been added
 fc = 0
 cc = 0
 pc = 0
 
+##TEST ADDITON OF INGREDIENTS
+chicken = Project_Classes.IngredientNode("Chicken",220,48,0,2,'protein','meat')
+ground_beef = Project_Classes.IngredientNode("Ground Beef",231,23,0,15,'protein','meat')
+tuna  = Project_Classes.IngredientNode("Tuna",80,16,0,0,'protein','meat')
+tofu = Project_Classes.IngredientNode("Tofu",180,20,2,12,'protein','none')
+rice = Project_Classes.IngredientNode("rice",200,4,45,0,'carb','none')
+noodle = Project_Classes.IngredientNode("Spagetti Noodle",220,8,43,1,'carb','none')
+bread = Project_Classes.IngredientNode("Texas Toast",150,3,15,8,'carb','none')
+oil = Project_Classes.IngredientNode("Olive oil",120,0,0,14,'fat','none')
+cheese = Project_Classes.IngredientNode("Cheddar Cheese",114,7,0,10,'fat','lactose')
+pb = Project_Classes.IngredientNode("Peanut Butter",188,8,6,16,'fat','peanut')
+added_ingredients.append(chicken)
+added_ingredients.append(rice)
+added_ingredients.append(oil)
+protein_ingredients.append(chicken)
+protein_ingredients.append(ground_beef)
+protein_ingredients.append(tuna)
+carb_ingredients.append(rice)
+carb_ingredients.append(noodle)
+carb_ingredients.append(bread)
+fat_ingredients.append(oil)
+fat_ingredients.append(cheese)
+fat_ingredients.append(pb)
+
+
+
 #setting up the window
 window = tkinter.Tk()
 window.title("Diet Plan")
-window.wm_iconbitmap('icon.ico')
+##window.wm_iconbitmap('icon.ico')
 
 #the frame for the ingredient section
 ing = tkinter.Frame(window,bd=5,relief='ridge')
@@ -179,9 +211,16 @@ def get_ingredient():
         i_carbs = 0
         i_fat = 0
     else:
+        ##This is where the ingredient is actually added
         global added_ingredients
         new_ing = Project_Classes.IngredientNode(i_name,i_cals,i_pro,i_carbs,i_fat,i_class,i_hazard.get())
         added_ingredients.append(new_ing)
+        if(new_ing.classification == 'carb'):
+            carb_ingredients.append(new_ing)
+        if(new_ing.classification == 'protein'):
+            protein_ingredients.append(new_ing)
+        if(new_ing.classification == 'fat'):
+            fat_ingredients.append(new_ing)
         name.delete(0,'end')
         total_calories.delete(0,'end')
         protein.delete(0,'end')
@@ -390,6 +429,50 @@ def reset_restrictions():
     global set_r
     set_r = 0
 
+
+def getIngredient(name,list):
+    for x in list:
+        if x.name == name:
+            return x
+
+
+##Trying to figure out if we need the "name" field
+def makeAMeal(ingredients,number):
+    return Project_Classes.MealNode((number+1),getIngredient(ingredients[0],protein_ingredients),getIngredient(ingredients[1],carb_ingredients),getIngredient(ingredients[2],fat_ingredients))
+
+
+##BFS
+def IterativeBFS(s):
+    OPEN = [s]
+    CLOSED = []
+
+    ##Gets all permutations of ingredients
+    ingredient_combos = Project_Classes.getPossibleMeals(protein_ingredients,carb_ingredients,fat_ingredients)
+
+    ##Creates a list of meal objects based on permutations
+    meals = []
+    for c in ingredient_combos:
+        meal = makeAMeal(c,0)
+        meals.append(meal)
+
+    ##Does BFS stops when we get a viable meal (May need to have another check for the day in total)
+    while OPEN != []:
+        S = OPEN[0]
+        del OPEN[0]
+        CLOSED.append(S)
+        L = []
+        if Project_Classes.goal_state(S):
+            print("Got em")
+            return S
+        for m in meals:
+            if Project_Classes.isMealPossible(g_cals,g_pro,g_carbs,g_fat,m,weight_goal.get(),vegetarian.get(),peanut_allergy.get(),lactose_intolerant.get()):
+                new_state = Project_Classes.change_state(S,m)
+                if new_state not in CLOSED and m not in S:
+                    L.append(new_state)
+        OPEN = OPEN + L
+
+
+
 #The method that will make the meals once all input from user received
 def make_meals():
     global g_cals, g_fat, g_protein, g_carbs, added_ingredients, set_r, fc, cc, pc
@@ -432,8 +515,14 @@ def make_meals():
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
         errbutton.pack()
     else:
-        #TO DO - this part should be fun >.>
-        pass
+        ##This is just a tester to make sure things are working according to plan
+        Project_Classes.print_goals(g_cals,g_pro,g_carbs,g_fat)
+
+        ##Here we just create a empty list that will get filled by IterativeBFS
+        day = []
+
+        ##Gets a day's worth of meals! Seems to be working just fine! Does not allow for the same meal all day
+        day  = IterativeBFS(day)
 
 #the method to display new meals if shown ones were not to the user's liking
 def new_meals():
@@ -629,6 +718,38 @@ total_meal_carbs.configure(state='disabled')
 diff_carbs = tkinter.Text(goal_diff,height=1,width=5)
 diff_carbs.grid(row=5,column=2)
 diff_carbs.configure(state='disabled')
+
+#Default Ingredient List for testing purposes#
+#######################################################################################################################
+# chicken = Project_Classes.IngredientNode("Chicken",220,48,0,2,'protein','meat')
+# ground_beef = Project_Classes.IngredientNode("Ground Beef",231,23,0,15,'protein','meat')
+# tuna  = Project_Classes.IngredientNode("Tuna",80,16,0,0,'protein','meat')
+# rice = Project_Classes.IngredientNode("rice",200,4,45,0,'carb','none')
+# noodle = Project_Classes.IngredientNode("Spagetti Noodle",220,8,43,1,'carb','none')
+# bread = Project_Classes.IngredientNode("Texas Toast",150,3,15,8,'carb','none')
+# oil = Project_Classes.IngredientNode("Olive oil",120,0,0,14,'fat','none')
+# cheese = Project_Classes.IngredientNode("Cheddar Cheese",114,7,0,10,'fat','lactose')
+# pb = Project_Classes.IngredientNode("Peanut Butter",188,8,6,16,'fat','peanut')
+# added_ingredients.append(chicken)
+# added_ingredients.append(rice)
+# added_ingredients.append(oil)
+# protein_ingredients.append(chicken)
+# protein_ingredients.append(ground_beef)
+# protein_ingredients.append(tuna)
+# carb_ingredients.append(rice)
+# carb_ingredients.append(noodle)
+# carb_ingredients.append(bread)
+# fat_ingredients.append(oil)
+# fat_ingredients.append(cheese)
+# fat_ingredients.append(pb)
+
+###had to add this so I could test the make meal button with the methods. We can delete this whenever we want if
+##we add ingredients by hand
+fc = 3
+pc = 3
+cc = 3
+########################################################################################################################
+
 
 #vanity, yo
 us = tkinter.Label(window,text="Program by: William Brugato and Josh Mendoza, Version: 0.9001", font = ('Arial',7,'italic'),fg='orange')
