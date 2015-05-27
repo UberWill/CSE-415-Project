@@ -1,5 +1,4 @@
 #the class to store ingredients
-#ADDED COMMENT LINE CHECK OF GIT IS WORKING
 class IngredientNode:
 
     def __init__(self, name, calories, protein, carbs, fat, classification, hazard):
