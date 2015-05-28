@@ -9,6 +9,11 @@ i_pro = 0
 i_carbs = 0
 i_fat = 0
 
+#just a simple variable to make sure a meal plan has been created, 0 = not created, 1 = created
+plan_made = 0
+
+#a list of all already suggested meal plans (gets filled and checked in bfs)
+suggested_meal_plans = []
 
 #A list of all added ingredients (they have their own attributes - see IngredientNode class)
 added_ingredients = []
@@ -19,9 +24,9 @@ full_days = []
 meals = []
 
 #counters for how many of each classification of ingredient has been added
-fc = 0
-cc = 0
-pc = 0
+fc = 3
+cc = 3
+pc = 4
 
 ##TEST ADDITON OF INGREDIENTS
 chicken = Project_Classes.IngredientNode("Chicken",220,48,0,2,'protein','meat')
@@ -35,11 +40,19 @@ oil = Project_Classes.IngredientNode("Olive oil",120,0,0,14,'fat','none')
 cheese = Project_Classes.IngredientNode("Cheddar Cheese",114,7,0,10,'fat','lactose')
 pb = Project_Classes.IngredientNode("Peanut Butter",188,8,6,16,'fat','peanut')
 added_ingredients.append(chicken)
+added_ingredients.append(ground_beef)
+added_ingredients.append(tuna)
+added_ingredients.append(tofu)
 added_ingredients.append(rice)
+added_ingredients.append(noodle)
+added_ingredients.append(bread)
 added_ingredients.append(oil)
+added_ingredients.append(cheese)
+added_ingredients.append(pb)
 protein_ingredients.append(chicken)
 protein_ingredients.append(ground_beef)
 protein_ingredients.append(tuna)
+protein_ingredients.append(tofu)
 carb_ingredients.append(rice)
 carb_ingredients.append(noodle)
 carb_ingredients.append(bread)
@@ -461,8 +474,9 @@ def IterativeBFS(s):
         del OPEN[0]
         CLOSED.append(S)
         L = []
-        if Project_Classes.goal_state(S):
+        if Project_Classes.goal_state(S) and not(meal_match(S)):
             print("Got em")
+            suggested_meal_plans.append(S)
             return S
         for m in meals:
             if Project_Classes.isMealPossible(g_cals,g_pro,g_carbs,g_fat,m,weight_goal.get(),vegetarian.get(),peanut_allergy.get(),lactose_intolerant.get()):
@@ -471,7 +485,19 @@ def IterativeBFS(s):
                     L.append(new_state)
         OPEN = OPEN + L
 
-
+#given a day's meal plan, returns true if that meal has already been suggested
+def meal_match(meal_plan):
+    global suggested_meal_plans
+    for s in suggested_meal_plans:
+        same_meals_found = 0
+        for i in range(3):
+            if meal_plan[i].fat_ingredient == s[i].fat_ingredient and \
+                    meal_plan[i].carb_ingredient == s[i].carb_ingredient and \
+                    meal_plan[i].protein_ingredient == s[i].protein_ingredient:
+                same_meals_found += 1
+        if same_meals_found == 3:
+            return True
+    return False
 
 #The method that will make the meals once all input from user received
 def make_meals():
@@ -524,10 +550,134 @@ def make_meals():
         ##Gets a day's worth of meals! Seems to be working just fine! Does not allow for the same meal all day
         day  = IterativeBFS(day)
 
+        #display the results for each day's meals in the results part of the GUI
+
+        #meal1
+        meal1.configure(state='normal')
+        meal1.insert('end',day[0].fat_ingredient.name +'\n'+ day[0].carb_ingredient.name +\
+                     '\n'+ day[0].protein_ingredient.name)
+        meal1.configure(state='disabled')
+        #meal 2
+        meal2.configure(state='normal')
+        meal2.insert('end',day[1].fat_ingredient.name +'\n'+ day[1].carb_ingredient.name +\
+                     '\n'+ day[1].protein_ingredient.name)
+        meal2.configure(state='disabled')
+        #meal 3
+        meal3.configure(state='normal')
+        meal3.insert('end',day[2].fat_ingredient.name +'\n'+ day[2].carb_ingredient.name +\
+                     '\n'+ day[2].protein_ingredient.name)
+        meal3.configure(state='disabled')
+
+        #display the goal differences
+        day_meals = Project_Classes.DayNode(day[0],day[1],day[2])
+
+        #calorie differences
+        total_meal_cals.configure(state='normal')
+        total_meal_cals.insert('end',day_meals.total_calories)
+        total_meal_cals.configure(state='disabled')
+        diff_cals.configure(state='normal')
+        if day_meals.total_calories-g_cals > 0:
+            diff_cals.insert('end','+')
+        diff_cals.insert('end',day_meals.total_calories-g_cals)
+        diff_cals.configure(state='disabled')
+
+        #fat differences
+        total_meal_fat.configure(state='normal')
+        total_meal_fat.insert('end',day_meals.total_fat)
+        total_meal_fat.configure(state='disabled')
+        diff_fat.configure(state='normal')
+        if day_meals.total_fat-g_fat > 0:
+            diff_fat.insert('end','+')
+        diff_fat.insert('end',day_meals.total_fat-g_fat)
+        diff_fat.configure(state='disabled')
+
+        #protein differences
+        total_meal_pro.configure(state='normal')
+        total_meal_pro.insert('end',day_meals.total_protein)
+        total_meal_pro.configure(state='disabled')
+        diff_pro.configure(state='normal')
+        if day_meals.total_protein-g_pro > 0:
+            diff_pro.insert('end','+')
+        diff_pro.insert('end',day_meals.total_protein-g_pro)
+        diff_pro.configure(state='disabled')
+
+        #carbs differences
+        total_meal_carbs.configure(state='normal')
+        total_meal_carbs.insert('end',day_meals.total_carbs)
+        total_meal_carbs.configure(state='disabled')
+        diff_carbs.configure(state='normal')
+        if day_meals.total_carbs-g_carbs > 0:
+            diff_carbs.insert('end','+')
+        diff_carbs.insert('end',day_meals.total_carbs-g_carbs)
+        diff_carbs.configure(state='disabled')
+
+        #make sure to mark that a meal plan has been made (used in new_meals())
+        global plan_made
+        plan_made = 1
+
+
+
+
+
+
 #the method to display new meals if shown ones were not to the user's liking
 def new_meals():
-    #TO DO
-    pass
+    global plan_made
+    if plan_made == 0:
+        top = tkinter.Toplevel()
+        top.title("Error")
+        top.geometry('{}x{}'.format(180,100))
+        top.wm_iconbitmap('error.ico')
+        msg = tkinter.Message(top, text = "Please click Make Meals first before making new meals.")
+        msg.pack()
+        errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
+        errbutton.pack()
+    else:
+        #whipe all data from GUI
+        meal1.configure(state='normal')
+        meal1.delete(1.0,'end')
+        meal1.configure(state='disabled')
+
+        meal2.configure(state='normal')
+        meal2.delete(1.0,'end')
+        meal2.configure(state='disabled')
+
+        meal3.configure(state='normal')
+        meal3.delete(1.0,'end')
+        meal3.configure(state='disabled')
+
+        total_meal_cals.configure(state='normal')
+        total_meal_cals.delete(1.0,'end')
+        total_meal_cals.configure(state='disabled')
+
+        total_meal_fat.configure(state='normal')
+        total_meal_fat.delete(1.0,'end')
+        total_meal_fat.configure(state='disabled')
+
+        total_meal_pro.configure(state='normal')
+        total_meal_pro.delete(1.0,'end')
+        total_meal_pro.configure(state='disabled')
+
+        total_meal_carbs.configure(state='normal')
+        total_meal_carbs.delete(1.0,'end')
+        total_meal_carbs.configure(state='disabled')
+
+        diff_cals.configure(state='normal')
+        diff_cals.delete(1.0,'end')
+        diff_cals.configure(state='disabled')
+
+        diff_fat.configure(state='normal')
+        diff_fat.delete(1.0,'end')
+        diff_fat.configure(state='disabled')
+
+        diff_pro.configure(state='normal')
+        diff_pro.delete(1.0,'end')
+        diff_pro.configure(state='disabled')
+
+        diff_carbs.configure(state='normal')
+        diff_carbs.delete(1.0,'end')
+        diff_carbs.configure(state='disabled')
+        make_meals()
 
 #initialize the Add Intgredients section
 tkinter.Label(ing, text = "Add Ingredients", font= ("Helvetica",16)).grid(row=0,columnspan=2)
@@ -574,28 +724,28 @@ tkinter.Button(ing, text="Add Ingredient",
 tkinter.Label(ing,text="Ingredients\nAdded:").grid(row=12,column=0,sticky='e')
 counter = tkinter.Text(ing,height=1,width=3)
 counter.grid(row=12,column=1,sticky='w')
-counter.insert('end',"0")
+counter.insert('end',len(added_ingredients))
 counter.configure(state='disabled')
 
 #number of fat-based ingredients added
 tkinter.Label(ing,text="Fat-Based\nIngredients\nAdded:").grid(row=13,column=0,sticky='e')
 fat_counter = tkinter.Text(ing,height=1,width=3)
 fat_counter.grid(row=13,column=1,sticky='w')
-fat_counter.insert('end',"0")
+fat_counter.insert('end',fc)
 fat_counter.configure(state='disabled')
 
 #number of carb-based ingredients added
 tkinter.Label(ing,text="Carb-Based\nIngredients\nAdded:").grid(row=14,column=0,sticky='e')
 carb_counter = tkinter.Text(ing,height=1,width=3)
 carb_counter.grid(row=14,column=1,sticky='w')
-carb_counter.insert('end',"0")
+carb_counter.insert('end',cc)
 carb_counter.configure(state='disabled')
 
 #number of protein-based ingredients added
 tkinter.Label(ing,text="Protein-Based\nIngredients\nAdded:").grid(row=15,column=0,sticky='e')
 pro_counter = tkinter.Text(ing,height=1,width=3)
 pro_counter.grid(row=15,column=1,sticky='w')
-pro_counter.insert('end',"0")
+pro_counter.insert('end',pc)
 pro_counter.configure(state='disabled')
 
 
@@ -745,9 +895,9 @@ diff_carbs.configure(state='disabled')
 
 ###had to add this so I could test the make meal button with the methods. We can delete this whenever we want if
 ##we add ingredients by hand
-fc = 3
-pc = 3
-cc = 3
+#fc = 3
+#pc = 3
+#cc = 3
 ########################################################################################################################
 
 
