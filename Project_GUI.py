@@ -65,7 +65,7 @@ fat_ingredients.append(pb)
 #setting up the window
 window = tkinter.Tk()
 window.title("Diet Plan")
-##window.wm_iconbitmap('icon.ico')
+window.wm_iconbitmap('icon.ico')
 
 #the frame for the ingredient section
 ing = tkinter.Frame(window,bd=5,relief='ridge')
@@ -375,16 +375,26 @@ def set_goals():
         g_pro = 0
         g_carbs = 0
     else:
+        g_fat = ((g_fat / 100) * g_cals) / 9
+        g_fat = round(g_fat,1)
+        g_pro = ((g_pro / 100) * g_cals) / 4
+        g_pro = round(g_pro,1)
+        g_carbs = ((g_carbs / 100) * g_cals) / 4
+        g_carbs = round(g_carbs)
+
+        fat_goal.delete(0,'end')
+        fat_goal.insert('end',str(g_fat)+' Grams of Fat')
+        protein_goal.delete(0,'end')
+        protein_goal.insert('end',str(g_pro)+' Grams of Protein')
+        carb_goal.delete(0,'end')
+        carb_goal.insert('end',str(g_carbs)+' Grams of carbs')
+
         calories_goal.configure(state='disabled')
         fat_goal.configure(state='disabled')
         protein_goal.configure(state='disabled')
         carb_goal.configure(state='disabled')
         r1.configure(state='disabled')
         r2.configure(state='disabled')
-
-        g_fat = ((g_fat / 100) * g_cals) / 9
-        g_pro = ((g_pro / 100) * g_cals) / 4
-        g_carbs = ((g_carbs / 100) * g_cals) / 4
 
         goal_set.configure(state='normal')
         goal_set.insert('end',"GOAL SET!")
@@ -414,6 +424,8 @@ def reset_goals():
     goal_set.delete(1.0,'end')
     goal_set.configure(state='disabled')
 
+    whipe_meal_data()
+
 #the method that sets the restrictions to prevent accidental changes
 def set_restrictions():
     c1.configure(state='disabled')
@@ -441,6 +453,7 @@ def reset_restrictions():
     lactose_intolerant.set(0)
     global set_r
     set_r = 0
+    whipe_meal_data()
 
 
 def getIngredient(name,list):
@@ -616,10 +629,6 @@ def make_meals():
         plan_made = 1
 
 
-
-
-
-
 #the method to display new meals if shown ones were not to the user's liking
 def new_meals():
     global plan_made
@@ -634,6 +643,11 @@ def new_meals():
         errbutton.pack()
     else:
         #whipe all data from GUI
+        whipe_meal_data()
+        make_meals()
+
+def whipe_meal_data():
+    #whipe all data from GUI
         meal1.configure(state='normal')
         meal1.delete(1.0,'end')
         meal1.configure(state='disabled')
@@ -677,7 +691,6 @@ def new_meals():
         diff_carbs.configure(state='normal')
         diff_carbs.delete(1.0,'end')
         diff_carbs.configure(state='disabled')
-        make_meals()
 
 #initialize the Add Intgredients section
 tkinter.Label(ing, text = "Add Ingredients", font= ("Helvetica",16)).grid(row=0,columnspan=2)
@@ -837,35 +850,35 @@ tkinter.Label(goal_diff,text='Fat').grid(row=3,column=0)
 tkinter.Label(goal_diff,text='Protein').grid(row=4,column=0)
 tkinter.Label(goal_diff,text='Carbs').grid(row=5,column=0)
 #now put in data fields (these will get populated during the actual meal selection)
-total_meal_cals = tkinter.Text(goal_diff,height=1,width=5)
+total_meal_cals = tkinter.Text(goal_diff,height=1,width=6)
 total_meal_cals.grid(row=2,column=1)
 total_meal_cals.configure(state='disabled')
 
-diff_cals = tkinter.Text(goal_diff,height=1,width=5)
+diff_cals = tkinter.Text(goal_diff,height=1,width=6)
 diff_cals.grid(row=2,column=2)
 diff_cals.configure(state='disabled')
 
-total_meal_fat = tkinter.Text(goal_diff,height=1,width=5)
+total_meal_fat = tkinter.Text(goal_diff,height=1,width=6)
 total_meal_fat.grid(row=3,column=1)
 total_meal_fat.configure(state='disabled')
 
-diff_fat = tkinter.Text(goal_diff,height=1,width=5)
+diff_fat = tkinter.Text(goal_diff,height=1,width=6)
 diff_fat.grid(row=3,column=2)
 diff_fat.configure(state='disabled')
 
-total_meal_pro = tkinter.Text(goal_diff,height=1,width=5)
+total_meal_pro = tkinter.Text(goal_diff,height=1,width=6)
 total_meal_pro.grid(row=4,column=1)
 total_meal_pro.configure(state='disabled')
 
-diff_pro = tkinter.Text(goal_diff,height=1,width=5)
+diff_pro = tkinter.Text(goal_diff,height=1,width=6)
 diff_pro.grid(row=4,column=2)
 diff_pro.configure(state='disabled')
 
-total_meal_carbs = tkinter.Text(goal_diff,height=1,width=5)
+total_meal_carbs = tkinter.Text(goal_diff,height=1,width=6)
 total_meal_carbs.grid(row=5,column=1)
 total_meal_carbs.configure(state='disabled')
 
-diff_carbs = tkinter.Text(goal_diff,height=1,width=5)
+diff_carbs = tkinter.Text(goal_diff,height=1,width=6)
 diff_carbs.grid(row=5,column=2)
 diff_carbs.configure(state='disabled')
 
