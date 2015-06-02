@@ -393,8 +393,8 @@ def set_goals():
         fat_goal.configure(state='disabled')
         protein_goal.configure(state='disabled')
         carb_goal.configure(state='disabled')
-        r1.configure(state='disabled')
-        r2.configure(state='disabled')
+        #r1.configure(state='disabled')
+        #r2.configure(state='disabled')
 
         goal_set.configure(state='normal')
         goal_set.insert('end',"GOAL SET!")
@@ -412,8 +412,8 @@ def reset_goals():
     fat_goal.configure(state='normal')
     protein_goal.configure(state='normal')
     carb_goal.configure(state='normal')
-    r1.configure(state='normal')
-    r2.configure(state='normal')
+    #r1.configure(state='normal')
+    #r2.configure(state='normal')
 
     calories_goal.delete(0,'end')
     fat_goal.delete(0,'end')
@@ -562,6 +562,22 @@ def make_meals():
 
         ##Gets a day's worth of meals! Seems to be working just fine! Does not allow for the same meal all day
         day  = IterativeBFS(day)
+
+        #if no meals could be found, tell user
+        if day == None:
+            #meal1
+            meal1.configure(state='normal')
+            meal1.insert('end','NO MEAL COULD BE\n FOUND')
+            meal1.configure(state='disabled')
+            #meal 2
+            meal2.configure(state='normal')
+            meal2.insert('end','NO MEAL COULD BE\n FOUND')
+            meal2.configure(state='disabled')
+            #meal 3
+            meal3.configure(state='normal')
+            meal3.insert('end','NO MEAL COULD BE\n FOUND')
+            meal3.configure(state='disabled')
+            return 0
 
         #display the results for each day's meals in the results part of the GUI
 
@@ -781,10 +797,10 @@ tkinter.Label(goals, text = "Carb (%)",).grid(row=12,sticky='e')
 carb_goal = tkinter.Entry(goals)
 carb_goal.grid(row=12,column=1)
 #the lose weight or gain weight options
-r1 = tkinter.Radiobutton(goals, text='Lose Weight', variable = weight_goal, value = 'lose')
-r1.grid(row=13,column=1)
-r2 =tkinter.Radiobutton(goals, text='Gain Weight', variable = weight_goal, value = 'gain')
-r2.grid(row=14,column=1)
+#r1 = tkinter.Radiobutton(goals, text='Lose Weight', variable = weight_goal, value = 'lose')
+#r1.grid(row=13,column=1)
+#r2 =tkinter.Radiobutton(goals, text='Gain Weight', variable = weight_goal, value = 'gain')
+#r2.grid(row=14,column=1)
 #button to set goals
 tkinter.Button(goals, text="Set Goals",
                command = set_goals).grid(row=15,column=0,sticky='e',pady=4)
