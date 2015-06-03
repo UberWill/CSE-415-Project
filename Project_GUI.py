@@ -65,23 +65,22 @@ fat_ingredients.append(pb)
 #setting up the window
 window = tkinter.Tk()
 window.title("Diet Plan")
-window.wm_iconbitmap('icon.ico')
 
 #the frame for the ingredient section
 ing = tkinter.Frame(window,bd=5,relief='ridge')
-ing.grid(row=0,column=0,sticky='w')
+ing.grid(row=0,column=0)
 
 #the frame for the goal section
 goals = tkinter.Frame(window,bd=5,relief='ridge')
-goals.grid(row=1,column=0,sticky='e')
+goals.grid(row=0,column=1)
 
 #the frame for the restrictions section
 rest = tkinter.Frame(window,bd=5,relief='ridge')
-rest.grid(row=1,column=1,sticky='w')
+rest.grid(row=0,column=2)
 
 #the frame to house the meals and goal differences, basically the results
 results = tkinter.Frame(window,bd=5,relief = 'ridge')
-results.grid(row=0,column=1,sticky='w')
+results.grid(row=0,column=3)
 
 #the ingredient hazard, 'peanuts' is peanut allergy, 'meat' means not vegetarian safe, 'lactose'
 #means not lactose intolerant safe, 'none' is obvious
@@ -131,7 +130,6 @@ def get_ingredient():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,100))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please enter an integer amount for calories.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -148,7 +146,6 @@ def get_ingredient():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,100))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please enter an integer amount for protein.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -165,7 +162,6 @@ def get_ingredient():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,100))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please enter an integer amount for carbs.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -182,7 +178,6 @@ def get_ingredient():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,100))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please enter an integer amount for fat.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -199,7 +194,6 @@ def get_ingredient():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,100))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please do not leave an ingredient entry blank.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -213,7 +207,6 @@ def get_ingredient():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,100))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please make sure Ingredient is either fat, carb, or protein.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -288,7 +281,6 @@ def set_goals():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,100))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please enter an integer amount for calories.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -304,7 +296,6 @@ def set_goals():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,100))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please enter an integer amount for fat.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -320,7 +311,6 @@ def set_goals():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,100))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please enter an integer amount for protein.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -336,7 +326,6 @@ def set_goals():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,100))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please enter an integer amount for carbs.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -352,7 +341,6 @@ def set_goals():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,90))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please do not leave a goal entry blank.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -365,7 +353,6 @@ def set_goals():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,90))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please make sure %'s add to 100%")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -488,7 +475,6 @@ def IterativeBFS(s):
         CLOSED.append(S)
         L = []
         if Project_Classes.goal_state(S) and not(meal_match(S)):
-            print("Got em")
             suggested_meal_plans.append(S)
             return S
         for m in meals:
@@ -520,7 +506,6 @@ def make_meals():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,70))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please set goals first.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -530,7 +515,6 @@ def make_meals():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,90))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please add more ingredients first.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -539,7 +523,6 @@ def make_meals():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,90))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please add at least one ingredient of each type.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
@@ -548,14 +531,13 @@ def make_meals():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,90))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please set restrictions first.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
         errbutton.pack()
     else:
         ##This is just a tester to make sure things are working according to plan
-        Project_Classes.print_goals(g_cals,g_pro,g_carbs,g_fat)
+        #Project_Classes.print_goals(g_cals,g_pro,g_carbs,g_fat)
 
         ##Here we just create a empty list that will get filled by IterativeBFS
         day = []
@@ -652,7 +634,6 @@ def new_meals():
         top = tkinter.Toplevel()
         top.title("Error")
         top.geometry('{}x{}'.format(180,100))
-        top.wm_iconbitmap('error.ico')
         msg = tkinter.Message(top, text = "Please click Make Meals first before making new meals.")
         msg.pack()
         errbutton = tkinter.Button(top, text = "Dismiss", command = top.destroy)
