@@ -912,7 +912,7 @@ diff_carbs.configure(state='disabled')
 
 
 #vanity, yo
-us = tkinter.Label(window,text="Program by: William Brugato and Josh Mendoza, Version: 0.9001", font = ('Arial',7,'italic'),fg='orange')
+us = tkinter.Label(window,text="Program by: William Brugato and Josh Mendoza, Version: 1.9001", font = ('Arial',7,'italic'),fg='orange')
 us.grid(row=3,column = 1)
 #button to quit the program
 tkinter.Button(window, text="Quit", background = 'red',command = window.quit).grid(row=3,column=2,pady=4)
