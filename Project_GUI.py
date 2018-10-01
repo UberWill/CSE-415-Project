@@ -72,15 +72,15 @@ ing.grid(row=0,column=0)
 
 #the frame for the goal section
 goals = tkinter.Frame(window,bd=5,relief='ridge')
-goals.grid(row=0,column=1)
+goals.grid(row=1,column=1)
 
 #the frame for the restrictions section
 rest = tkinter.Frame(window,bd=5,relief='ridge')
-rest.grid(row=0,column=2)
+rest.grid(row=1,column=0)
 
 #the frame to house the meals and goal differences, basically the results
 results = tkinter.Frame(window,bd=5,relief = 'ridge')
-results.grid(row=0,column=3)
+results.grid(row=0,column=1)
 
 #the ingredient hazard, 'peanuts' is peanut allergy, 'meat' means not vegetarian safe, 'lactose'
 #means not lactose intolerant safe, 'none' is obvious
