@@ -16,21 +16,20 @@ class IngredientNode:
 #the class to store meals
 class MealNode:
 
-    def __init__(self, name, ingredient1, ingredient2, ingredient3):
-        ingredients = [ingredient1, ingredient2, ingredient3]
+    def __init__(self, name, *ingredients):
 
+        if ingredients.length > 3:
+            raise Exception('Invalid number of ingredients')
+        self.fat_ingredient = None
+        self.carb_ingredient = None
+        self.protein_ingredient = None
+        valid = ['fat','carb','protein']
         ##Changed this to allow for a None Meal Node to be used for testing and BFS
         for i in ingredients:
-            if i == None:
-                self.fat_ingredient = None
-                self.carb_ingredient = None
-                self.protein_ingredient = None
-            elif i.classification == 'fat':
-                self.fat_ingredient = i
-            elif i.classification == 'carb':
-                self.carb_ingredient = i
-            elif i.classification == 'protein':
-                self.protein_ingredient = i
+            if i.classification not in valid:
+                raise Exception('Invalid or duplicate classificaiton found')
+            setattr(self, i.classication + '_ingredient', i)
+            valid.remove(i.classification)
 
         self.mealName = name
         if self.protein_ingredient == None:
