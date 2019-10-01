@@ -68,20 +68,20 @@ def getPossibleMeals(protiens,carbs,fats):
 
 ##this will check to see if there is a restriction on the meal that is proposed. If so let the user no it cannot use this meal
 def check_restrictions(ingredient,vegR,peanutR,lactoseR):
-    if ingredient.hazard == 'none':
+    if ingredient.hazard.lower() == 'none':
         return False
     if vegR == 1:
-        if ingredient.hazard == 'meat':
+        if ingredient.hazard.lower() == 'meat':
             return True
         else:
             return False
     if peanutR == 1:
-        if ingredient.hazard == 'peanut':
+        if ingredient.hazard.lower() == 'peanut':
             return True
         else:
             return False
     if lactoseR == 1:
-        if ingredient.hazard == 'lactose':
+        if ingredient.hazard.lower() == 'lactose':
             return True
         else:
             return False
