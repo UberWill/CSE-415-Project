@@ -24,6 +24,7 @@ full_days = []
 meals = []
 
 #counters for how many of each classification of ingredient has been added
+#make sure to increment these if you add a below ingredient
 fc = 3
 cc = 3
 pc = 4
